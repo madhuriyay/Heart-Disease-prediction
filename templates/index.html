@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction - Upload</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background: #F9FAFB; }
+        .header-bg { background: linear-gradient(90deg, #1E3A8A 0%, #3B82F6 100%); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="header-bg text-white p-4 md:p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-bold">Heart Disease Predictor</h1>
+            <nav class="space-x-4 hidden md:flex">
+                <a href="/" class="hover:text-gray-200">Home</a>
+                <a href="/graphs" class="hover:text-gray-200">Visualizations</a>
+            </nav>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-6 md:p-8 w-full max-w-md card-hover transition-all duration-300">
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-800 text-center mb-4">Upload Patient Data</h2>
+            <p class="text-gray-600 text-center mb-6">Please upload a CSV file containing patient records to train our predictive model.</p>
+            {% if error %}
+                <p class="text-red-600 text-sm text-center mb-4">{{ error }}</p>
+            {% endif %}
+            <form action="/train" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <div>
+                    <label for="csv_file" class="block text-sm font-medium text-gray-700">Select CSV File</label>
+                    <label for="csv_file" class="mt-2 flex items-center justify-center w-full h-12 bg-white-600 text-black rounded-md cursor-pointer hover:bg-white-700 transition duration-200 font-medium">
+                        <span id="file-name" class="text-sm">Choose File</span>
+                        <input type="file" id="csv_file" name="csv_file" accept=".csv" class="hidden" onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : 'Choose File'">
+                    </label>
+                    <p class="text-xs text-gray-500 mt-1">Only .csv files are supported.</p>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition duration-200 font-medium">Start Training</button>
+            </form>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p class="text-sm">&copy; 2025 HeartSync AI. All rights reserved.</p>
+    </footer>
+</body>
+</html>

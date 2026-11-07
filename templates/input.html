@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart Disease Prediction – Input</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body {font-family:'Roboto',sans-serif;background:#F9FAFB;}
+  .tooltip{position:relative;display:inline-block;}
+  .tooltip .tooltiptext{
+    visibility:hidden;background:#1E3A8A;color:#fff;text-align:center;
+    padding:8px 12px;border-radius:6px;position:absolute;z-index:10;
+    bottom:125%;left:50%;transform:translateX(-50%);opacity:0;
+    transition:opacity .3s;font-size:.875rem;white-space:nowrap;
+  }
+  .tooltip:hover .tooltiptext,
+  .tooltip:focus .tooltiptext{visibility:visible;opacity:1;}
+  .card-hover{box-shadow:0 4px 6px rgba(0,0,0,.1);}
+  .card-hover:hover{box-shadow:0 10px 20px rgba(0,0,0,.15);}
+  .header-bg{background:linear-gradient(135deg,#1E40AF,#1E3A8A);}
+  .msg{font-size:0.75rem;margin-top:4px;}
+  .msg.error{color:#dc2626;}
+  .msg.ok{color:#16a34a;}
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="header-bg text-white p-4 md:p-6 shadow-md">
+  <div class="container mx-auto flex justify-between items-center">
+    <h1 class="text-2xl md:text-3xl font-bold">Heart Disease Predictor</h1>
+    <nav class="space-x-6 hidden md:flex text-lg">
+      <a href="/" class="hover:text-gray-200 transition">Home</a>
+      <a href="/graphs" class="hover:text-gray-200 transition">Visualizations</a>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-grow flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl p-6 md:p-8 w-full max-w-md card-hover transition-all duration-300">
+    <h2 class="text-2xl font-semibold text-gray-800 text-center mb-3">Patient Details</h2>
+    <p class="text-gray-600 text-center mb-6 text-sm">Enter medical data – only numbers are allowed.</p>
+
+    
+
+    <form id="predictForm" action="/predict" method="POST" class="grid grid-cols-1 gap-5">
+
+      <!-- ==== NUMERIC FIELDS (type=text + strict JS) ==== -->
+
+      <div class="field" data-name="age" data-min="1" data-max="120">
+        <label class="block text-sm font-medium text-gray-700">Age <span class="text-red-500">*</span></label>
+        <input type="text" name="age" required placeholder="e.g., 52"
+               class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+        <div class="msg"></div>
+      </div>
+
+      <div class="field" data-name="restbps" data-min="50" data-max="200">
+        <label class="block text-sm font-medium text-gray-700">Resting BP (mm Hg) <span class="text-red-500">*</span></label>
+        <input type="text" name="restbps" required placeholder="e.g., 125"
+               class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+        <div class="msg"></div>
+      </div>
+
+      <div class="field" data-name="chol" data-min="100" data-max="600">
+        <label class="block text-sm font-medium text-gray-700">Cholesterol (mg/dl) <span class="text-red-500">*</span></label>
+        <input type="text" name="chol" required placeholder="e.g., 212"
+               class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+        <div class="msg"></div>
+      </div>
+
+      <div class="field" data-name="thalach" data-min="60" data-max="220">
+        <label class="block text-sm font-medium text-gray-700">Max Heart Rate <span class="text-red-500">*</span></label>
+        <input type="text" name="thalach" required placeholder="e.g., 168"
+               class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+        <div class="msg"></div>
+      </div>
+
+      <div class="field" data-name="oldpeak" data-min="0" data-max="6.2" data-decimal="true">
+        <label class="block text-sm font-medium text-gray-700">ST Depression (Oldpeak) <span class="text-red-500">*</span></label>
+        <input type="text" name="oldpeak" required placeholder="e.g., 1.0"
+               class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+        <div class="msg"></div>
+      </div>
+
+      <!-- ==== CATEGORICAL SELECTS ==== -->
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Gender <span class="text-red-500">*</span></label>
+        <select name="gender" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="1">Male (1)</option>
+          <option value="0">Female (0)</option>
+        </select>
+        <span class="tooltiptext">1 = Male, 0 = Female</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Chest Pain Type <span class="text-red-500">*</span></label>
+        <select name="cp" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="0">0 – Typical Angina</option>
+          <option value="1">1 – Atypical Angina</option>
+          <option value="2">2 – Non‑Anginal Pain</option>
+          <option value="3">3 – Asymptomatic</option>
+        </select>
+        <span class="tooltiptext">0‑3 scale</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Fasting BS >120 mg/dl <span class="text-red-500">*</span></label>
+        <select name="fbs" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="1">Yes (1)</option>
+          <option value="0">No (0)</option>
+        </select>
+        <span class="tooltiptext">1 = Yes, 0 = No</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Resting ECG <span class="text-red-500">*</span></label>
+        <select name="restecg" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="0">0 – Normal</option>
+          <option value="1">1 – ST‑T abnormality</option>
+          <option value="2">2 – LV hypertrophy</option>
+        </select>
+        <span class="tooltiptext">0‑2 results</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Exercise Angina <span class="text-red-500">*</span></label>
+        <select name="exang" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="1">Yes (1)</option>
+          <option value="0">No (0)</option>
+        </select>
+        <span class="tooltiptext">1 = Yes, 0 = No</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Slope of Peak ST <span class="text-red-500">*</span></label>
+        <select name="slope" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="1">1 – Upsloping</option>
+          <option value="2">2 – Flat</option>
+          <option value="3">3 – Downsloping</option>
+        </select>
+        <span class="tooltiptext">1‑3 slope</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Major Vessels (0‑3) <span class="text-red-500">*</span></label>
+        <select name="ca" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+        <span class="tooltiptext">Number of vessels</span>
+      </div>
+
+      <div class="tooltip">
+        <label class="block text-sm font-medium text-gray-700">Thalassemia <span class="text-red-500">*</span></label>
+        <select name="thal" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+          <option value="" disabled selected>Select</option>
+          <option value="3">3 – Normal</option>
+          <option value="6">6 – Fixed defect</option>
+          <option value="7">7 – Reversible defect</option>
+        </select>
+        <span class="tooltiptext">3,6,7 types</span>
+      </div>
+
+      <button type="submit"
+              class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-md hover:from-blue-700 hover:to-blue-800 transition duration-200 font-semibold text-lg shadow-md">
+        Predict Heart Disease Risk
+      </button>
+    </form>
+
+    <a href="/" class="mt-5 block text-center text-blue-600 hover:underline text-sm">Back to Upload</a>
+  </div>
+</main>
+
+<footer class="bg-gray-800 text-white p-4 text-center">
+  <p class="text-sm">© 2025 Heart Disease Prediction. All rights reserved.</p>
+</footer>
+
+<script>
+/* ---------- STRICT NUMBER INPUT ---------- */
+document.querySelectorAll('.field').forEach(container => {
+  const input   = container.querySelector('input');
+  const msg     = container.querySelector('.msg');
+  const min     = +container.dataset.min;
+  const max     = +container.dataset.max;
+  const decimal = container.dataset.decimal === 'true';
+  let timer;
+
+  const validate = () => {
+    let val = input.value.trim();
+
+    // ---- 1. Strip illegal characters ----
+    if (decimal) {
+      // allow digits + one dot
+      val = val.replace(/[^0-9.]/g, '');
+      const parts = val.split('.');
+      if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+    } else {
+      val = val.replace(/[^0-9]/g, '');
+    }
+    input.value = val;
+
+    // ---- 2. Range check (only after a short pause) ----
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (val === '') {
+        msg.textContent = '';
+        return;
+      }
+      const num = parseFloat(val);
+      if (isNaN(num) || num < min || num > max) {
+        msg.textContent = `Must be ${min} – ${max}`;
+        msg.className = 'msg error';
+        input.setCustomValidity('invalid');
+      } else {
+        msg.textContent = 'OK';
+        msg.className = 'msg ok';
+        input.setCustomValidity('');
+      }
+    }, 300);
+  };
+
+  input.addEventListener('input', validate);
+  input.addEventListener('blur', validate);   // final check on tab‑out
+});
+</script>
+
+</body>
+</html>
